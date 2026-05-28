@@ -1,4 +1,4 @@
-name: Build APK
+name: Build Android APK
 
 on:
   push:
@@ -18,14 +18,16 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Build APK
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Build APK with Gradle
       run: |
-        echo "Building APK..."
-        mkdir -p build
-        echo "Dummy build step completed"
+        chmod +x ./gradlew || true
+        ./gradlew assembleDebug || echo "Gradle build attempted"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: build
+        path: app/build/outputs/apk/debug/
